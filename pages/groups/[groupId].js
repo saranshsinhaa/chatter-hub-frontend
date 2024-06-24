@@ -12,11 +12,18 @@ export default function GroupChat() {
   const { groupId } = router.query;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+
     const fetchMessages = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await fetch(`${BASE_URL}/api/messages/${groupId}`, {
           headers: {
             Authorization: token,
@@ -24,7 +31,6 @@ export default function GroupChat() {
         });
         if (res.ok) {
           const data = await res.json();
-          console.log("Messages", data);
           setMessages(data);
         } else {
           console.error("Failed to fetch messages");
@@ -70,6 +76,22 @@ export default function GroupChat() {
     socket.emit("leaveGroup", { groupId, token });
     router.push("/groups");
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen max-md:w-[85%] w-[65%] mx-auto text-black">
+        <div className="p-6 bg-white rounded shadow-md text-center">
+          <h2 className="mb-4 text-2xl font-bold">Please Login First</h2>
+          <button
+            onClick={() => router.push("/login")}
+            className="text-white bg-blue-500 rounded px-3 py-2 hover:bg-blue-700"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center min-h-screen text-black">

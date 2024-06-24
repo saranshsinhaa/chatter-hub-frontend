@@ -6,11 +6,18 @@ export default function Groups() {
   const [groups, setGroups] = useState([]);
   const [groupName, setGroupName] = useState("");
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+
     const fetchGroups = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await fetch(`${BASE_URL}/api/groups`, {
           headers: {
             Authorization: token,
@@ -19,7 +26,6 @@ export default function Groups() {
         if (res.ok) {
           const data = await res.json();
           setGroups(data);
-          // console.log("Groups", data);
         } else {
           console.error("Failed to fetch groups");
         }
@@ -45,8 +51,8 @@ export default function Groups() {
       });
       if (res.ok) {
         const group = await res.json();
-        setGroups([...groups, group]); // Update state to include newly created group
-        setGroupName(""); // Clear input field
+        setGroups([...groups, group]);
+        setGroupName("");
       } else {
         console.error("Failed to create group");
       }
@@ -55,8 +61,24 @@ export default function Groups() {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen max-md:w-[85%] w-[65%] mx-auto text-black">
+        <div className="p-6 bg-white rounded shadow-md text-center">
+          <h2 className="mb-4 text-2xl font-bold">Please Login First</h2>
+          <button
+            onClick={() => router.push("/login")}
+            className="text-white bg-blue-500 rounded px-3 py-2 hover:bg-blue-700"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex-col max-md:w-[85%] w-[65%]  mx-auto items-center justify-center min-h-screen  text-black">
+    <div className="flex-col max-md:w-[85%] w-[65%] mx-auto items-center justify-center min-h-screen text-black">
       <div className="p-6 bg-white rounded shadow-md my-24">
         <h2 className="mb-4 text-2xl font-bold">Create Group</h2>
         <form onSubmit={handleCreateGroup} className="mb-4">
@@ -80,7 +102,6 @@ export default function Groups() {
       </div>
       <div className="p-6 bg-white rounded shadow-md">
         <h2 className="mb-4 text-2xl font-bold">Join Group</h2>
-
         <ul>
           {groups.map((group) => (
             <li key={group._id} className="mb-2 text-lg">
