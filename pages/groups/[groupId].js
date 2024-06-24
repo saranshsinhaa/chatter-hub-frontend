@@ -11,38 +11,54 @@ export default function GroupChat() {
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
 
+  // Fetch messages when component mounts or groupId changes
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:5000/api/messages/${groupId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setMessages(data);
+        } else {
+          console.error("Failed to fetch messages");
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
     if (groupId) {
-      const token = localStorage.getItem("token");
+      fetchMessages();
+    }
+  }, [groupId]);
+
+  // Handle joining and leaving socket room
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (groupId) {
       socket.emit("joinGroup", { groupId, token });
 
-      socket.on("newMessage", (message) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-      });
+      socket.on("newMessage", handleMessageReceived);
 
       return () => {
+        socket.off("newMessage", handleMessageReceived);
         socket.emit("leaveGroup", { groupId, token });
       };
     }
   }, [groupId]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const token = localStorage.getItem("token");
-      const res = await fetch(
-        `http://localhost:5000/api/groups/${groupId}/messages`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      const data = await res.json();
-      setMessages(data);
-    };
-
-    fetchMessages();
-  }, [groupId]);
+  const handleMessageReceived = (message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -56,8 +72,8 @@ export default function GroupChat() {
       <div className="w-full max-w-2xl p-6 bg-white rounded shadow-md">
         <h2 className="mb-4 text-2xl font-bold">Group Chat</h2>
         <div className="mb-4">
-          {messages.map((message, index) => (
-            <div key={index} className="mb-2">
+          {messages.map((message) => (
+            <div key={message._id} className="mb-2">
               <strong>{message.sender.username}</strong>: {message.content}
             </div>
           ))}

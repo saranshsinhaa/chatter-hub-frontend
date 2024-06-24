@@ -18,6 +18,7 @@ export default function Groups() {
         if (res.ok) {
           const data = await res.json();
           setGroups(data);
+          // console.log("Groups", data);
         } else {
           console.error("Failed to fetch groups");
         }
