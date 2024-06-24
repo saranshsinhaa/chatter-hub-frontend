@@ -1,7 +1,9 @@
+// pages/login.js
+
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-export default function Login() {
+const Login = ({ setIsLoggedIn }) => {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +21,7 @@ export default function Login() {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem("token", data.token);
+      setIsLoggedIn(true);
       router.push("/groups");
     } else {
       console.error("Login failed");
@@ -60,4 +63,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

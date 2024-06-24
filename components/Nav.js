@@ -2,24 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
-const Nav = () => {
+const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setIsLoggedIn(isAuthenticated());
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsLoggedIn(false);
     router.push("/");
-  };
-
-  const isAuthenticated = () => {
-    const token = localStorage.getItem("token");
-    return !!token;
   };
 
   return (
@@ -31,9 +21,6 @@ const Nav = () => {
         <div className="flex space-x-4">
           {isLoggedIn ? (
             <>
-              {/* <Link href="/dashboard">
-                <p className="text-white">Dashboard</p>
-              </Link> */}
               <Link href="/">
                 <p className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300">
                   Home
