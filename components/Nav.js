@@ -9,28 +9,24 @@ const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check authentication status when component mounts
     setIsLoggedIn(isAuthenticated());
   }, []);
 
   const handleLogout = () => {
-    // Implement logout logic here, such as removing JWT token from localStorage
     localStorage.removeItem("token");
-    // Redirect to homepage or login page
     router.push("/");
   };
 
   const isAuthenticated = () => {
-    // Check if the user is authenticated based on your logic
     const token = localStorage.getItem("token");
-    return !!token; // Return true if token exists, false otherwise
+    return !!token;
   };
 
   return (
     <nav className="bg-gray-800 py-4">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <Link href="/">
-          <p className="text-white text-2xl font-bold">Group Chat</p>
+          <p className="text-white text-2xl font-bold">Chatter Hub</p>
         </Link>
         <div className="flex space-x-4">
           {isLoggedIn ? (
@@ -38,9 +34,14 @@ const Nav = () => {
               {/* <Link href="/dashboard">
                 <p className="text-white">Dashboard</p>
               </Link> */}
+              <Link href="/">
+                <p className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                  Home
+                </p>
+              </Link>
               <button
                 onClick={handleLogout}
-                className="text-white hover:underline"
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300"
               >
                 Logout
               </button>

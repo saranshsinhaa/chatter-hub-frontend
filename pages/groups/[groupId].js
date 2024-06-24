@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import io from "socket.io-client";
+import { format } from "date-fns";
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const socket = io(`${BASE_URL}`);
@@ -12,7 +14,6 @@ export default function GroupChat() {
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
 
-  // Fetch messages when component mounts or groupId changes
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -24,6 +25,7 @@ export default function GroupChat() {
         });
         if (res.ok) {
           const data = await res.json();
+          console.log("Messages", data);
           setMessages(data);
         } else {
           console.error("Failed to fetch messages");
@@ -38,7 +40,6 @@ export default function GroupChat() {
     }
   }, [groupId]);
 
-  // Handle joining and leaving socket room
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -66,13 +67,31 @@ export default function GroupChat() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-black">
-      <div className="w-full max-w-2xl p-6 bg-white rounded shadow-md">
+    <div className="flex flex-col items-center min-h-screen text-black">
+      <div className="w-[65%] my-24 p-6 bg-white rounded shadow-md">
         <h2 className="mb-4 text-2xl font-bold">Group Chat</h2>
-        <div className="mb-4">
+        <div className="mb-4 max-h-[50vh] overflow-y-auto space-y-4">
           {messages.map((message) => (
-            <div key={message._id} className="mb-2">
-              <strong>{message.sender.username}</strong>: {message.content}
+            <div
+              key={message._id}
+              className="p-4 border border-gray-300 rounded-lg bg-gray-100"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <strong className="text-blue-600">
+                    {message.sender.username}
+                  </strong>
+                  : {message.content}
+                </div>
+                <i className="text-gray-500">
+                  {message.timestamp
+                    ? format(
+                        new Date(message.timestamp),
+                        "hh:mm a dd MMMM yyyy"
+                      )
+                    : "Just Now"}
+                </i>
+              </div>
             </div>
           ))}
         </div>

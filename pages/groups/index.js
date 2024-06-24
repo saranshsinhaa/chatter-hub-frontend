@@ -56,9 +56,9 @@ export default function Groups() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-black">
-      <div className="p-6 bg-white rounded shadow-md">
-        <h2 className="mb-4 text-2xl font-bold">Groups</h2>
+    <div className="flex-col w-[65%]  mx-auto items-center justify-center min-h-screen  text-black">
+      <div className="p-6 bg-white rounded shadow-md my-24">
+        <h2 className="mb-4 text-2xl font-bold">Create Group</h2>
         <form onSubmit={handleCreateGroup} className="mb-4">
           <div className="flex mb-4">
             <input
@@ -77,15 +77,18 @@ export default function Groups() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="p-6 bg-white rounded shadow-md">
+        <h2 className="mb-4 text-2xl font-bold">Join Group</h2>
+
         <ul>
           {groups.map((group) => (
-            <li key={group._id} className="mb-2">
-              {group.name}
+            <li key={group._id} className="mb-2 text-lg">
               <button
                 onClick={() => router.push(`/groups/${group._id}`)}
-                className="ml-2 text-blue-500 underline"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 mx-4"
               >
-                Join
+                {group.name}
               </button>
             </li>
           ))}
