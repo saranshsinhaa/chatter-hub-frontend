@@ -66,10 +66,24 @@ export default function GroupChat() {
     setNewMessage("");
   };
 
+  const handleLeaveChat = () => {
+    const token = localStorage.getItem("token");
+    socket.emit("leaveGroup", { groupId, token });
+    router.push("/groups");
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen text-black">
       <div className="w-[65%] my-24 p-6 bg-white rounded shadow-md">
-        <h2 className="mb-4 text-2xl font-bold">Group Chat</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">Group Chat</h2>
+          <button
+            onClick={handleLeaveChat}
+            className="text-white bg-red-500 rounded px-3 py-2 hover:bg-red-700"
+          >
+            Leave Chat
+          </button>
+        </div>
         <div className="mb-4 max-h-[50vh] overflow-y-auto space-y-4">
           {messages.map((message) => (
             <div
