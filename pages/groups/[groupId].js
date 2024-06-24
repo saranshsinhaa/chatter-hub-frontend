@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import io from "socket.io-client";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const socket = io("http://localhost:5000");
+const socket = io(`${BASE_URL}`);
 
 export default function GroupChat() {
   const router = useRouter();
@@ -16,14 +17,11 @@ export default function GroupChat() {
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(
-          `http://localhost:5000/api/messages/${groupId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const res = await fetch(`${BASE_URL}/api/messages/${groupId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           setMessages(data);

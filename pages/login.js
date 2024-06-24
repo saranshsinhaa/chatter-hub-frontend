@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Login() {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/api/users/login", {
+    const res = await fetch(`${BASE_URL}/api/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

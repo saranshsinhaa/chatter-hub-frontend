@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Groups() {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [groups, setGroups] = useState([]);
   const [groupName, setGroupName] = useState("");
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function Groups() {
     const fetchGroups = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/groups", {
+        const res = await fetch(`${BASE_URL}/api/groups`, {
           headers: {
             Authorization: token,
           },
@@ -34,7 +35,7 @@ export default function Groups() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/groups", {
+      const res = await fetch(`${BASE_URL}/api/groups`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
