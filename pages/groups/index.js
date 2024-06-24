@@ -56,7 +56,7 @@ export default function Groups() {
   };
 
   return (
-    <div className="flex-col w-[65%]  mx-auto items-center justify-center min-h-screen  text-black">
+    <div className="flex-col max-md:w-[85%] w-[65%]  mx-auto items-center justify-center min-h-screen  text-black">
       <div className="p-6 bg-white rounded shadow-md my-24">
         <h2 className="mb-4 text-2xl font-bold">Create Group</h2>
         <form onSubmit={handleCreateGroup} className="mb-4">

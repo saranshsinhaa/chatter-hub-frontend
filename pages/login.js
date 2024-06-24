@@ -29,7 +29,7 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-black">
+    <div className="flex items-center justify-center min-h-screen  text-black">
       <div className="p-6 bg-white rounded shadow-md">
         <h2 className="mb-4 text-2xl font-bold">Login</h2>
         <form onSubmit={handleSubmit}>

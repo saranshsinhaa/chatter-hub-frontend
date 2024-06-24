@@ -12,7 +12,6 @@ export default function GroupChat() {
   const { groupId } = router.query;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -74,7 +73,7 @@ export default function GroupChat() {
 
   return (
     <div className="flex flex-col items-center min-h-screen text-black">
-      <div className="w-[65%] my-24 p-6 bg-white rounded shadow-md">
+      <div className="w-[65%] max-md:w-[85%] my-24 p-6 bg-white rounded shadow-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Group Chat</h2>
           <button
@@ -97,7 +96,7 @@ export default function GroupChat() {
                   </strong>
                   : {message.content}
                 </div>
-                <i className="text-gray-500">
+                <i className="text-gray-500 max-md:text-xs">
                   {message.timestamp
                     ? format(
                         new Date(message.timestamp),
