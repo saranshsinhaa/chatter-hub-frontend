@@ -1,7 +1,7 @@
-// pages/login.js
-
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = ({ setIsLoggedIn }) => {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -22,8 +22,10 @@ const Login = ({ setIsLoggedIn }) => {
       const data = await res.json();
       localStorage.setItem("token", data.token);
       setIsLoggedIn(true);
+      toast.success("Login successful! Redirecting to groups...");
       router.push("/groups");
     } else {
+      toast.error("Login failed. Please check your credentials.");
       console.error("Login failed");
     }
   };
@@ -61,6 +63,7 @@ const Login = ({ setIsLoggedIn }) => {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

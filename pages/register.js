@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Register() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -17,8 +19,10 @@ export default function Register() {
       body: JSON.stringify({ username, password }),
     });
     if (res.ok) {
+      toast.success("Registration successful! Redirecting to login page...");
       router.push("/login");
     } else {
+      toast.error("Registration failed. Please try again.");
       console.error("Registration failed");
     }
   };
@@ -56,6 +60,7 @@ export default function Register() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }
